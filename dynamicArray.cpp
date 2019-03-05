@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <iomanip>
 using namespace std;
 
 #include "additional functions.h"
@@ -54,7 +55,7 @@ bool dynamicArray::in(istream& is) {
 // output the array to the file with formatting
 void dynamicArray::out(ostream& os) const {
 	for (size_t i = 0, f = 0; i < Size; ++i) {
-		os << '\t' << arr[i];
+		os << setw(6) << arr[i];
 		f += 1;
 		if (f == 4 && i + 1 < Size) {
 			f = 0;
