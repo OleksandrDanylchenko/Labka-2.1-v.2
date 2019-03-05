@@ -1,53 +1,85 @@
-//creating an input file with a sample text
 #include <iostream>
 #include <fstream>
-#include <random>
+#include <Windows.h>
+#include <string>
+using namespace std;
 
-size_t randomGenerator(size_t min, size_t max);
+#include "dynamicArray.h"
+#include "additional functions.h"
 
 int main(void) {
-	//asking for a name of output file with matrix representation
-	std::string inputFile = "D:/Studying/Programming/LABS/Labka_2.1_Second_Sem/";
-	std::string inputFileTemp = "";
-	do {
-		std::cout << "Enter only the name of the output file: ";
-		std::cin >> inputFileTemp;
-	} while (inputFileTemp.empty());
-	inputFile += inputFileTemp + ".txt";
+	//opens terminal in fullscreen mode
+	system("mode con COLS=700");
+	ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
+	SendMessage(GetConsoleWindow(), WM_SYSKEYDOWN, VK_RETURN, 0x20000000);
 
-	std::ofstream inFile;
-	inFile.open(inputFile);
-	if (inFile.fail()) {
-		std::cerr << "Error Opening inputData.txt" << std::endl;
-		inFile.close();
+	putAboutA();
+	dynamicArray array; // creates a dynamic array as a class
+	size_t option = getOption(); // how the user wants to fill up a dynamic array
+	try {
+		if (option == 1) {	//from file
+			string inputFilePath = "";
+			ifstream inputFile;
+			cin.ignore(); // gets rid of \n before getline()
+			while (true) {
+				cout << "\nEnter the path to the input file: ";
+				cin.clear(); //clears the stream if ^z is pushed
+				getline(cin, inputFilePath);
+				inputFile.open(inputFilePath);
+				if (inputFile.fail()) {
+					inputFilePath.clear();
+					continue;
+				}
+				else
+					break;
+			}
+			inputFile.close();
+			if (!fillByFile(array, inputFilePath))
+				throw logic_error("Array was not filled from file! Reupload the file!");
+		}
+		else if (option == 2) { //fill from the keyboard
+			if (!fillByKbd(array))
+				throw logic_error("Array was not filled by the keyboard!");
+		}
+		else if (option == 9)
+			return -9;
+	}
+	catch (std::bad_alloc&) {
+		cerr << "\n=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%" << endl;
+		cerr << "\t	MEMORY ALLOC" << "\n\tCapacity: " << array.getCapacity() << "\n\tSize in bytes: " << array.getSize() * sizeof(int) << "\nERROR!" << endl;
+		cerr << "=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%" << endl << endl;
 		system("pause");
 		return -1;
 	}
+	// handles all the other exceptions
+	catch (exception& ex) {
+		cerr << '\t' << ex.what() << endl << endl;
+		system("pause");
+		return -2;
+	}
 
-	size_t userSize = 0;
+	processArray(array);
+
+	string outputFilePath = "";
+	ofstream outputFile;
 	while (true) {
-		std::cout << "Enter the amount of elements: ";
-		if (!(std::cin >> userSize)) {
-			//reset the input
-			std::cin.clear();
-			//get rid of the bad input before return was pressed
-			while (std::cin.get() != '\n');
+		cout << "\nEnter the path to the output file: ";
+		cin.ignore();
+		getline(cin, outputFilePath);
+		if (outputFilePath[0] != 'C' && outputFilePath[0] != 'D') { //if user didn't provided full adress -> create a new file in the root folder
+			outputFilePath += ".txt";
+			cout << "\nYour file will be stored at: D:" << '\\' << "Studying" << '\\' << "Programming" << '\\' << "LABS" << '\\' << "Labka_2.1_Second_Sem" << '\\' << "Labka_2.1_Second_Sem" << '\\' << outputFilePath << endl;
 		}
-		else if (userSize <= 0)
+		outputFile.open(outputFilePath);
+		if (outputFile.fail())
 			continue;
 		else
 			break;
 	}
-
-	for (size_t i = 0; i < userSize; ++i)
-		inFile << ' ' << randomGenerator(0, 99);
-	inFile.close();
-}
-
-size_t randomGenerator(size_t min, size_t max) {
-	std::mt19937 rng;
-	rng.seed(std::random_device()());
-	//rng.seed(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-	std::uniform_int_distribution<std::mt19937::result_type> dist(min, max);
-	return dist(rng);
+	outputFile.close();
+	outputArray(array, outputFilePath);
+	
+	array.~dynamicArray();
+	system("pause");
+	return 0;
 }
