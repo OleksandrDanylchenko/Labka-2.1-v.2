@@ -23,7 +23,7 @@ int main(void) {
 			cin.ignore(); // gets rid of \n before getline()
 			while (true) {
 				cout << "\nEnter the path to the input file: ";
-				cin.clear();
+				cin.clear(); //clears the stream if ^z is pushed
 				getline(cin, inputFilePath);
 				inputFile.open(inputFilePath);
 				if (inputFile.fail()) {
@@ -66,7 +66,7 @@ int main(void) {
 		cout << "\nEnter the path to the output file: ";
 		cin.ignore();
 		getline(cin, outputFilePath);
-		if (outputFilePath[0] != 'C' && outputFilePath[0] != 'D') { //if user didn't provided full adress -> create a new file in the root folder
+		if (outputFilePath[0] != 'C' && outputFilePath[0] != 'D')) { //if user didn't provided full adress -> create a new file in the root folder
 			outputFilePath += ".txt";
 			cout << "\nYour file will be stored at: D:" << '\\' << "Studying" << '\\' << "Programming" << '\\' << "LABS" << '\\' << "Labka_2.1_Second_Sem" << '\\' << "Labka_2.1_Second_Sem" << '\\' << outputFilePath << endl;
 		}
