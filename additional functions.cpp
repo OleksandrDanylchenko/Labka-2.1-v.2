@@ -36,15 +36,15 @@ size_t getOption() {
 bool fillByFile(dynamicArray& a, const string& inputFilePath) noexcept {
 	ifstream inputFile;
 	inputFile.open(inputFilePath);
-	while (!inputFile.eof()) {
+	while (!inputFile.eof())
 		if (!(inputFile >> a))
 			return false;
-	}
 	inputFile.close();
 	return true;
 }
 
 bool fillByKbd(dynamicArray& a) {
+	cout << endl;
 	while (true) {
 		cout << "array[" << a.getSize() << "] = ";
 		if (!(cin >> a))
@@ -60,17 +60,17 @@ bool fillByKbd(dynamicArray& a) {
 bool isNumber(const string& s) {
 	if (s.length() == 0)
 		return false;
-	else {
-		for (size_t i = 0; i < s.length(); i++) {
-			if (!(s[i] >= '0' && s[i] <= '9'))
+	else
+		for (size_t i = 0; i < s.length(); i++)
+			if (s[i] == '-' && i == 0)
+				continue;
+			else if (!(s[i] >= '0' && s[i] <= '9'))
 				return false;
-		}
-	}
 	return true;
 }
 
 bool isPrimeNum(const int& k) {
-	//handle only natural numbers higher than 2
+	//handle only natural numbers higher than 1
 	if (k <= 1)
 		return false;
 	for (int i = 2; i <= sqrt(k); ++i)
@@ -82,9 +82,8 @@ bool isPrimeNum(const int& k) {
 void outputArray(const dynamicArray& a, const string& outputFilePath) {
 	ofstream outputFile;
 	outputFile.open(outputFilePath);
-	if (outputFile.fail()) {
+	if (outputFile.fail()) 
 		throw logic_error("Error in opening of output file!");
-	}
 	outputFile << a; 
 	outputFile.close();
 }
