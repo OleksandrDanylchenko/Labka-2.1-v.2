@@ -77,7 +77,7 @@ void dynamicArray::Resize() {
 	cout << "\n=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%" << endl;
 	cout << "\tMEMORY ALLOC" << "\n\tCapacity: " << Capacity << "\n\tSize in bytes: " << Size * sizeof(int) << endl;
 	cout << "=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%" << endl << endl;
-	for (size_t i = 0; i < Size; i++)
+	for (size_t i = 0; i < Size; ++i)
 		newArray[i] = arr[i];
 	delete[] arr;
 	arr = newArray;
