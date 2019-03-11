@@ -7,7 +7,7 @@ using namespace std;
 #include "dynamicArray.h"
 #include "additional functions.h"
 
-int main(void) {
+int main() {
 	//opens terminal in fullscreen mode
 	system("mode con COLS=700");
 	ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
@@ -37,10 +37,9 @@ int main(void) {
 			if (!fillByFile(array, inputFilePath))
 				throw logic_error("Array was not filled from file! Reupload the file!");
 		}
-		else if (option == 2) { //fill from the keyboard
+		else if (option == 2)//fill from the keyboard
 			if (!fillByKbd(array))
 				throw logic_error("Array was not filled by the keyboard!");
-		}
 		else if (option == 9)
 			return -9;
 	}
