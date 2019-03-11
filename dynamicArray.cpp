@@ -115,9 +115,8 @@ void processArray(dynamicArray& a) {
 		return;
 	} 
 	else
-		for (size_t i = a.Size; i > 0; --i) {
+		for (size_t i = a.Size; i > 0; --i)
 			a.arr[i] = a.arr[i - 1];
-		}
 	a.arr[0] = newValue;
 	++a.Size;
 }
