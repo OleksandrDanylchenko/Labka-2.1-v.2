@@ -37,7 +37,8 @@ ostream& operator<<(ostream& os, const dynamicArray& a) {
 // insert an element to the array if it has numeric value, else return false
 // if the array is full, doubles its size
 bool dynamicArray::in(istream& is) {
-	string checkVal = "";
+	while (true) {
+		string checkVal = "";
 		if (Size < Capacity) {
 			is >> checkVal;
 			if (isNumber(checkVal)) {
@@ -50,6 +51,7 @@ bool dynamicArray::in(istream& is) {
 		}
 		else
 			Resize();
+	}
 }
 
 // output the array to the file with formatting
@@ -64,17 +66,13 @@ void dynamicArray::out(ostream& os) const {
 	}
 }
 
-size_t dynamicArray::getSize() const {
-	return Size;
-}
+size_t dynamicArray::getSize() const { return Size; }
 
-size_t dynamicArray::getCapacity() const {
-	return Capacity;
-}
+size_t dynamicArray::getCapacity() const { return Capacity; }
 
 // doubles the size of the array
 void dynamicArray::Resize() {
-	Capacity = Capacity * 2;
+	Capacity *= 2;
 	int* newArray = new int[Capacity];
 	cout << "\n=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%" << endl;
 	cout << "\tMEMORY ALLOC" << "\n\tCapacity: " << Capacity << "\n\tSize in bytes: " << Size * sizeof(int) << endl;
@@ -100,9 +98,8 @@ void processArray(dynamicArray& a) {
 		}
 	}
 	
-	if (a.Size + 1 >= a.Capacity) {
+	if (a.Size + 1 >= a.Capacity)
 		a.Resize();
-	}
 
 	// find the last prime number in the array
 	size_t lastPrimeNum = 10;
