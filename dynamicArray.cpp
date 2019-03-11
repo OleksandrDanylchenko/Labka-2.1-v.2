@@ -97,7 +97,6 @@ void processArray(dynamicArray& a) {
 			while (cin.get() != '\n'); // empty loop
 		}
 	}
-	
 	if (a.Size + 1 >= a.Capacity)
 		a.Resize();
 
