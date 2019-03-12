@@ -61,7 +61,7 @@ bool isNumber(const string& s) {
 	if (s.length() == 0)
 		return false;
 	else
-		for (size_t i = 0; i < s.length(); i++)
+		for (size_t i = 0; i < s.length(); ++i)
 			if (s[i] == '-' && i == 0)
 				continue;
 			else if (!(s[i] >= '0' && s[i] <= '9'))
