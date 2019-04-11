@@ -1,84 +1,112 @@
+//LABKA 2-4 v.1
 #include <iostream>
 #include <fstream>
-#include <Windows.h>
 #include <string>
-using namespace std;
+#include "classes.h"
 
-#include "dynamicArray.h"
-#include "additional functions.h"
+void putAboutStudent();
+
+std::istream& setIStream(std::ifstream& f);
+std::ostream& setOStream(std::ofstream& f);
 
 int main() {
-	//opens terminal in fullscreen mode
-	system("mode con COLS=700");
-	ShowWindow(GetConsoleWindow(), SW_MAXIMIZE);
-	SendMessage(GetConsoleWindow(), WM_SYSKEYDOWN, VK_RETURN, 0x20000000);
-
-	putAboutA();
-	dynamicArray array; // creates a dynamic array as a class
-	size_t option = getOption(); // how the user wants to fill up a dynamic array
+	putAboutStudent();
+	Polynom operandA, operandB;
+	
+	// INPUT
 	try {
-		if (option == 1) {	//from file
-			string inputFilePath = "";
-			ifstream inputFile;
-			cin.ignore(); // gets rid of \n before getline()
-			while (true) {
-				cout << "\nEnter the path to the input file: ";
-				cin.clear(); //clears the stream if ^z is pushed
-				getline(cin, inputFilePath);
-				inputFile.open(inputFilePath);
-				if (inputFile.fail()) {
-					inputFilePath.clear();
-					continue;
-				}
-				else
-					break;
-			}
-			inputFile.close();
-			if (!fillByFile(array, inputFilePath))
-				throw logic_error("Array was not filled from file! Reupload the file!");
-		}
-		else if (option == 2)//fill from the keyboard
-			if (!fillByKbd(array))
-				throw logic_error("Array was not filled by the keyboard!");
-		else if (option == 9)
-			return -9;
-	}
-	catch (std::bad_alloc&) {
-		cerr << "\n=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%" << endl;
-		cerr << "\t	MEMORY ALLOC" << "\n\tCapacity: " << array.getCapacity() << "\n\tSize in bytes: " << array.getSize() * sizeof(int) << "\nERROR!" << endl;
-		cerr << "=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%" << endl << endl;
+		std::ifstream f;
+		std::istream& s_inA = setIStream(f);
+		s_inA >> operandA;
+		std::istream& s_inB = setIStream(f);
+		s_inB >> operandB;
+
+		Polynom resultPlus = operandA + operandB;
+		Polynom resultMinus = operandA - operandB;
+		operandA += operandB;
+
+		// OUTPUT
+		std::ofstream g;
+		std::ostream& s_outP = setOStream(g);
+		s_outP << resultPlus;
+		std::ostream& s_outM = setOStream(g);
+		s_outM << resultMinus;
+		std::ostream& s_outPE = setOStream(g);
+		s_outPE << operandA;
+
+		// CLEANING UP MEMORY
+		operandA.~Polynom();
+		operandB.~Polynom();
+		resultPlus.~Polynom();
+		resultMinus.~Polynom();
+	} catch (std::exception & ex) {
+		std::cerr << "\n\t" << ex.what() << std::endl;
 		system("pause");
 		return -1;
 	}
-	// handles all the other exceptions
-	catch (exception& ex) {
-		cerr << '\t' << ex.what() << endl << endl;
-		system("pause");
-		return -2;
-	}
-
-	processArray(array);
-
-	string outputFilePath = "";
-	ofstream outputFile;
-	while (true) {
-		cout << "\nEnter the path to the output file: ";
-		cin.ignore();
-		getline(cin, outputFilePath);
-		if (outputFilePath[0] != 'C' && outputFilePath[0] != 'D') { //if user didn't provided full adress -> create a new file in the root folder
-			outputFilePath += ".txt";
-			cout << "\nYour file will be stored at: D:" << '\\' << "Studying" << '\\' << "Programming" << '\\' << "LABS" << '\\' << "Labka_2.1_Second_Sem" << '\\' << "Labka_2.1_Second_Sem" << '\\' << outputFilePath << endl;
-		}
-		outputFile.open(outputFilePath);
-		if (outputFile.fail())
-			continue;
-		else
-			break;
-	}
-	outputFile.close();
-	outputArray(array, outputFilePath);
-	
-	array.~dynamicArray();
+	std::cout << std::endl;
 	system("pause");
 	return 0;
 }
+
+void putAboutStudent() {
+	std::cout << "Laboratory work 2 - 4 Linked Lists" << std::endl;
+	std::cout << "Group: K-14 Danilchenko Alexander" << std::endl;
+	std::cout << "VAR: 70" << std::endl;
+}
+
+std::istream& setIStream(std::ifstream& f) {
+	int i;
+	if (std::cin.fail() || f.bad()) {
+		std::cin.clear(); 
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+	while (true) {
+		std::cout << "\n... Enter 1(kbd) or 2(file): ";
+		std::cin >> i;
+		if (i == 1)
+			return std::cin;
+		else if (i == 2)
+			while (true) {
+				std::cout << "\n... Enter input filepath: ";
+				std::string fN;
+				std::cin.get(); // pass Enter from previous input
+				getline(std::cin, fN);
+				if (fN.length() == 0)
+					fN = "in.txt";
+				f.open(fN);
+				if (f.fail())
+					continue;
+				return (std::istream&)f;
+			} 
+		else
+			continue;
+	}
+}
+
+std::ostream& setOStream(std::ofstream& f) {
+	int i;
+	std::cout << "\n... Enter for out: 1(screen) or 2(file): ";
+	if (std::cin.fail() || f.fail()) {
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+	std::cin >> i;
+	if (i == 1)
+		return std::cout;
+	else
+		while (true) {
+			std::cout << "\n... Enter output filepath: ";
+			std::string fN;
+			std::cin.get(); // pass Enter from previous input
+			getline(std::cin, fN);
+			if (fN.length() == 0)
+				fN = "out.txt";
+			f.open(fN);
+			if (f.fail())
+				continue;
+			return (std::ostream&)f;
+		}
+}
+
+// root folder D:/Studying/Programming/LABS/Labka 2-4 v.1/Labka 2-4 v.1/100000.txt
