@@ -1,3 +1,4 @@
+// Labka 2.1 v.1
 #include <iostream>
 #include <fstream>
 #include <Windows.h>
@@ -66,7 +67,7 @@ int main() {
 		cout << "\nEnter the path to the output file: ";
 		cin.ignore();
 		getline(cin, outputFilePath);
-		if (outputFilePath[0] != 'C' && outputFilePath[0] != 'D') { //if user didn't provided full adress -> create a new file in the root folder
+		if (outputFilePath.find('\/') == std::string::npos or outputFilePath.find('\\') == std::string::npos) { //if user didn't provided full adress -> create a new file in the root folder
 			outputFilePath += ".txt";
 			cout << "\nYour file will be stored at: D:" << '\\' << "Studying" << '\\' << "Programming" << '\\' << "LABS" << '\\' << "Labka_2.1_Second_Sem" << '\\' << "Labka_2.1_Second_Sem" << '\\' << outputFilePath << endl;
 		}
