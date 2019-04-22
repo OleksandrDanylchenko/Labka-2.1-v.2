@@ -1,3 +1,4 @@
+// Labka 2.1 v.1 class implementation
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -6,7 +7,7 @@ using namespace std;
 #include "additional functions.h"
 
 //CONSTRUCTORS
-dynamicArray::dynamicArray() : Size(0), Capacity(N), arr(new int[N]) {}
+dynamicArray::dynamicArray() : Size{ 0 }, Capacity{ N }, arr{ new int[N] } {}
 
 //DESTRUCTOR
 dynamicArray::~dynamicArray() {
@@ -101,13 +102,13 @@ void processArray(dynamicArray& a) {
 		a.Resize();
 
 	// find the last prime number in the array
-	size_t lastPrimeNum = 10;
+	size_t lastPrimeNum = -1;
 	for (size_t l = 0; l < a.Size; ++l)
 		if (isPrimeNum(a.arr[l]))
 			lastPrimeNum = l;
 
 	// add the newElement after last prime number if it  occured, else insert in the beginning
-	if (lastPrimeNum != 10) {
+	if (lastPrimeNum != -1) {
 		for (size_t k = a.Size; k > lastPrimeNum + 1; --k)
 			a.arr[k] = a.arr[k - 1];
 		a.arr[lastPrimeNum + 1] = newValue;
